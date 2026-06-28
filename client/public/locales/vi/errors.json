@@ -1,0 +1,11 @@
+{
+  "EMAIL_ALREADY_EXISTS": "Email đã được đăng ký",
+  "NAME_ALREADY_EXISTS": "Tên đã tồn tại",
+  "DATA_ALREADY_EXISTS": "Dữ liệu đã tồn tại",
+  "RECORD_NOT_FOUND": "Không tìm thấy dữ liệu",
+  "DATABASE_ERROR": "Lỗi cơ sở dữ liệu. Vui lòng thử lại",
+  "SOMETHING_WENT_WRONG": "Đã có lỗi xảy ra. Vui lòng thử lại",
+  "INVALID_EMAIL": "Địa chỉ email không hợp lệ",
+  "FIELD_TOO_SHORT": "Phải có ít nhất {{min}} ký tự",
+  "FIELD_TOO_LONG": "Không được vượt quá {{max}} ký tự"
+}

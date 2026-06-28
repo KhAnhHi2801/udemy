@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "register": "Đăng ký",
+    "login": "Đăng nhập",
+    "language": "Ngôn ngữ"
+  },
+  "register": {
+    "title": "Đăng ký",
+    "name_placeholder": "Nhập tên",
+    "email_placeholder": "Nhập email",
+    "password_placeholder": "Nhập mật khẩu",
+    "submit": "Đăng ký",
+    "success": "Đăng ký tài khoản thành công"
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "subtitle": "Đăng nhập vào tài khoản của bạn"
+  }
+}

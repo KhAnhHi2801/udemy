@@ -1,25 +1,47 @@
-import { Prisma } from "../generated/prisma/client.ts"
+import { Prisma } from "../generated/prisma/client.ts";
 
-const FIELD_MESSAGES: Record<string, string> = {
-    email: "Email already registered",
-    name: "Name already taken",
-}
+const UNIQUE_FIELD_CODES: Record<string, string> = {
+  email: "EMAIL_ALREADY_EXISTS",
+  name: "NAME_ALREADY_EXISTS",
+};
 
-const handlePrismaError = (error: unknown): { message: string; status: number } => {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        switch (error.code) {
-            case "P2002": {
-                const field = (error.meta?.target as string[])?.[0]
-                const message = field ? (FIELD_MESSAGES[field] ?? `${field} already exists`) : "Data already exists"
-                return { message, status: 409 }  // 409 Conflict
-            }
-            case "P2025":
-                return { message: "Record not found", status: 404 }
-            default:
-                return { message: "Database error", status: 400 }
-        }
+const handlePrismaError = (
+  error: unknown,
+): { code: string; message: string; status: number } => {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (error.code) {
+      case "P2002": {
+        // meta.target removed in Prisma 7.x; driver adapter exposes fields via driverAdapterError
+        const meta = error.meta as Record<string, unknown> | undefined;
+        const adapterFields = (
+          meta?.driverAdapterError as Record<string, unknown> | undefined
+        )?.cause as { constraint?: { fields?: string[] } } | undefined;
+        const field =
+          adapterFields?.constraint?.fields?.[0] ??
+          (meta?.target as string[] | undefined)?.[0];
+
+        const code = UNIQUE_FIELD_CODES[field ?? ""] ?? "DATA_ALREADY_EXISTS";
+        return { code, message: "Data already exists", status: 409 };
+      }
+      case "P2025":
+        return {
+          code: "RECORD_NOT_FOUND",
+          message: "Record not found",
+          status: 404,
+        };
+      default:
+        return {
+          code: "DATABASE_ERROR",
+          message: "Database error",
+          status: 400,
+        };
     }
-    return { message: "Something went wrong", status: 500 }
-}
+  }
+  return {
+    code: "SOMETHING_WENT_WRONG",
+    message: "Something went wrong",
+    status: 500,
+  };
+};
 
-export { handlePrismaError }
+export { handlePrismaError };
