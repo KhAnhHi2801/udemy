@@ -1,0 +1,19 @@
+enum Role {
+    Subscriber
+    Instructor
+    Admin
+}
+
+model User {
+    id                String   @id @default(cuid())
+    name              String
+    email             String   @unique
+    password          String
+    role              Role     @default(Subscriber)
+    picture           String?  @default("/avatar.png")
+    stripe_account_id String?  @default("")
+    stripe_seller     Json?    @default("{}")
+    stripeSession     Json?    @default("{}")
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+}

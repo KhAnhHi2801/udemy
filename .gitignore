@@ -1,0 +1,15 @@
+node_modules
+
+# Keep environment variables out of version control
+server/.env
+client/.env
+
+# Keep generated Prisma client out of version control
+server/generated/prisma
+
+# node_modules
+client/node_modules
+server/node_modules
+
+# next.js build output
+client/.next
