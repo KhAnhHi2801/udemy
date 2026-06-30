@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { handlePrismaError } from "./prisma-error-handler.ts";
+import { normalizeError } from "./errors/error-normalizer.ts";
 
 type Handler = (
   req: Request,
@@ -10,7 +10,7 @@ type ErrorHandler = (error: unknown, req: Request, res: Response) => void;
 
 const defaultErrorHandler: ErrorHandler = (error, _req, res) => {
   console.error(error);
-  const { code, message, status } = handlePrismaError(error);
+  const { code, message, status } = normalizeError(error);
   res.status(status).json({ code, message });
 };
 

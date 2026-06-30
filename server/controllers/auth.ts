@@ -1,8 +1,12 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
 import prisma from "../lib/prisma.ts";
-import { hashPassword } from "../utils/auth.ts";
+import { comparePassword, hashPassword } from "../utils/auth.ts";
 import asyncHandler from "../lib/async-handler.ts";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const registerSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long"),
@@ -14,7 +18,7 @@ const registerSchema = z.object({
 });
 
 const register = asyncHandler(async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password } = req.body || {};
   const { success, data, error } = registerSchema.safeParse({
     name,
     email,
@@ -45,4 +49,50 @@ const register = asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json({ message: "User registered successfully", user });
 });
 
-export { register };
+const login = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body || {};
+
+  // Check if our database has user with that password
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    res.status(400).json({ message: "No user found" });
+    return;
+  }
+
+  if (!process.env.JWT_SECRET) {
+    throw new Error("SOMETHING_WENT_WRONG");
+  }
+
+  // Check password
+  const match = await comparePassword(password, user.password);
+
+  if (!match) {
+    res.status(400).json({ message: "Invalid email or password" });
+    return;
+  }
+
+  // Create signed jwt
+  const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+
+  // Send token in cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    // secure: true, // Only works on https
+  });
+
+  // Return user to client, exclude hashed password
+  const { password: _password, ...userWithoutPassword } = user;
+
+  res
+    .status(200)
+    .json({ message: "User login successfully", user: userWithoutPassword });
+});
+
+export { register, login };

@@ -52,16 +52,32 @@ const TopNav = () => {
   const { t } = useTranslation("common");
 
   const navItems: MenuProps["items"] = [
-    { key: "/", icon: <AppstoreOutlined />, label: <Link href="/">App</Link> },
+    {
+      key: "/",
+      icon: <AppstoreOutlined />,
+      label: (
+        <Link className="text-decoration-none" href="/">
+          App
+        </Link>
+      ),
+    },
     {
       key: "/login",
       icon: <LoginOutlined />,
-      label: <Link href="/login">{t("login")}</Link>,
+      label: (
+        <Link className="text-decoration-none" href="/login">
+          {t("login")}
+        </Link>
+      ),
     },
     {
       key: "/register",
       icon: <UserAddOutlined />,
-      label: <Link href="/register">{t("register")}</Link>,
+      label: (
+        <Link className="text-decoration-none" href="/register">
+          {t("register")}
+        </Link>
+      ),
     },
   ];
 

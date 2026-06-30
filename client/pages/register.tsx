@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useRegister } from "../hooks/use-auth";
 import { useTranslation } from "next-i18next/pages";
 import { GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/pages/serverSideTranslations";
 import { getTranslationProps } from "../lib/with-translations";
 import Link from "next/link";
+import { SyncOutlined } from "@ant-design/icons";
 
 const Register = () => {
   const { t } = useTranslation(["common", "errors"]);
@@ -13,7 +13,7 @@ const Register = () => {
   const [password, setPassword] = useState("anyapassword");
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const { mutate: registerUser } = useRegister(); // Assuming you have a mutation hook for registering users
+  const { mutate: registerUser, isPending } = useRegister(); // Assuming you have a mutation hook for registering users
 
   const onChangeValue = (
     value: string,
@@ -100,8 +100,12 @@ const Register = () => {
             onChange={onChangePassword}
             required
           />
-          <button type="submit" className="btn btn-primary btn-block">
-            {t("submit")}
+          <button
+            type="submit"
+            className="btn btn-primary btn-block"
+            disabled={!email || !password || isPending}
+          >
+            {isPending ? <SyncOutlined spin /> : t("submit")}
           </button>
         </form>
 

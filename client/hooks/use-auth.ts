@@ -6,6 +6,11 @@ interface RegisterData extends User {
   password: string;
 }
 
+interface LoginData {
+  email: string;
+  password: string;
+}
+
 const useRegister = () => {
   const setUser = useSetUser();
 
@@ -21,4 +26,19 @@ const useRegister = () => {
   });
 };
 
-export { useRegister };
+const useLogin = () => {
+  const setUser = useSetUser();
+
+  return useMutation({
+    mutationFn: (data: LoginData) => {
+      return api.post("/login", data);
+    },
+    onSuccess: (res) => {
+      const user: User = res.data.user;
+      console.log("User logined successfully", user);
+      setUser(user);
+    },
+  });
+};
+
+export { useRegister, useLogin };
