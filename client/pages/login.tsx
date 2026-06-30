@@ -7,10 +7,7 @@ const Login = () => {
 
   return (
     <>
-      <h1 className="jumbotron bg-primary text-center square">
-        {t("login.title")}
-      </h1>
-      <p>{t("login.subtitle")}</p>
+      <h1 className="jumbotron bg-primary text-center square">{t("login")}</h1>
     </>
   );
 };

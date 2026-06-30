@@ -56,12 +56,12 @@ const TopNav = () => {
     {
       key: "/login",
       icon: <LoginOutlined />,
-      label: <Link href="/login">{t("nav.login")}</Link>,
+      label: <Link href="/login">{t("login")}</Link>,
     },
     {
       key: "/register",
       icon: <UserAddOutlined />,
-      label: <Link href="/register">{t("nav.register")}</Link>,
+      label: <Link href="/register">{t("register")}</Link>,
     },
   ];
 

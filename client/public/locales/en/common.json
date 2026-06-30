@@ -1,19 +1,9 @@
 {
-  "nav": {
-    "register": "Register",
-    "login": "Login",
-    "language": "Language"
-  },
-  "register": {
-    "title": "Register",
-    "name_placeholder": "Enter name",
-    "email_placeholder": "Enter email",
-    "password_placeholder": "Enter password",
-    "submit": "Submit",
-    "success": "User registered successfully"
-  },
-  "login": {
-    "title": "Login",
-    "subtitle": "Login to your account"
-  }
+  "login": "Login",
+  "register": "Register",
+  "submit": "Submit",
+  "enter-name": "Enter name",
+  "enter-email": "Enter email",
+  "enter-password": "Enter password",
+  "already-registered": "Already registered?"
 }

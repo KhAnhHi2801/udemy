@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next/pages";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/pages/serverSideTranslations";
 import { getTranslationProps } from "../lib/with-translations";
+import Link from "next/link";
 
 const Register = () => {
   const { t } = useTranslation(["common", "errors"]);
@@ -68,7 +69,9 @@ const Register = () => {
 
   return (
     <>
-      <h1 className="jumbotron bg-primary text-center square">Register</h1>
+      <h1 className="jumbotron bg-primary text-center square">
+        {t("register")}
+      </h1>
 
       <div className="container col-md-4 offset-md-4 pb-5">
         {apiError && <div className="alert alert-danger">{apiError}</div>}
@@ -76,7 +79,7 @@ const Register = () => {
           <input
             type="text"
             className="form-control mb-4 p-4"
-            placeholder={t("register.name_placeholder")}
+            placeholder={t("enter-name")}
             value={name}
             onChange={onChangeName}
             required
@@ -84,7 +87,7 @@ const Register = () => {
           <input
             type="email"
             className="form-control mb-4 p-4"
-            placeholder={t("register.email_placeholder")}
+            placeholder={t("enter-email")}
             value={email}
             onChange={onChangeEmail}
             required
@@ -92,15 +95,22 @@ const Register = () => {
           <input
             type="password"
             className="form-control mb-4 p-4"
-            placeholder={t("register.password_placeholder")}
+            placeholder={t("enter-password")}
             value={password}
             onChange={onChangePassword}
             required
           />
           <button type="submit" className="btn btn-primary btn-block">
-            {t("register.submit")}
+            {t("submit")}
           </button>
         </form>
+
+        <p className="text-center pt-3">
+          {t("already-registered")}{" "}
+          <Link className="text-decoration-none" href="/login">
+            {t("login")}
+          </Link>
+        </p>
       </div>
     </>
   );
