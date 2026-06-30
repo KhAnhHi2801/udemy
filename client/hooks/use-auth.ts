@@ -11,7 +11,7 @@ const useRegister = () => {
 
   return useMutation({
     mutationFn: (data: RegisterData) => {
-      return api.post("/api/register", data);
+      return api.post("/register", data);
     },
     onSuccess: (res) => {
       const user: User = res.data.user;

@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "antd/dist/antd.css";
+import { ConfigProvider } from "antd";
 import "../public/css/styles.css";
 import "../components/TopNav";
 import TopNav from "../components/TopNav";
@@ -10,10 +10,12 @@ import nextI18nextConfig from "../next-i18next.config.js";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TopNav />
-      <Component {...pageProps} />
-    </QueryClientProvider>
+    <ConfigProvider theme={{ cssVar: {} }}>
+      <QueryClientProvider client={queryClient}>
+        <TopNav />
+        <Component {...pageProps} />
+      </QueryClientProvider>
+    </ConfigProvider>
   );
 }
 
