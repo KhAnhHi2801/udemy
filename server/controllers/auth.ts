@@ -18,6 +18,13 @@ const registerSchema = z.object({
     .max(64, "Password must be at most 64 characters long"),
 });
 
+/**
+ * Registers a new user in the system.
+ * Validates the input data using Zod schema, hashes the password, and stores the user in the database.
+ * Returns a success message and the created user (excluding the password) upon successful registration.
+ * @param req - The Express request object containing the user registration data in the body.
+ * @param res - The Express response object used to send back the response.
+ */
 const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body || {};
   const { success, data, error } = registerSchema.safeParse({
@@ -41,15 +48,19 @@ const register = asyncHandler(async (req: Request, res: Response) => {
       email: data.email,
       password: hashedPassword,
     },
-    select: {
-      name: true,
-      email: true,
-    },
   });
 
   res.status(201).json({ message: "User registered successfully", user });
 });
 
+/**
+ * Logs in a user by validating their credentials.
+ * Checks if the user exists, compares the provided password with the stored hashed password,
+ * generates a JWT token upon successful authentication, and sends it in a cookie.
+ * Returns a success message and the authenticated user (excluding the password) upon successful login.
+ * @param req - The Express request object containing the user login data in the body.
+ * @param res - The Express response object used to send back the response.
+ */
 const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body || {};
 
@@ -96,6 +107,24 @@ const login = asyncHandler(async (req: Request, res: Response) => {
     .json({ message: "User login successfully", user: userWithoutPassword });
 });
 
+/**
+ * Logs out a user by clearing the authentication token cookie.
+ * Returns a success message upon successful logout.
+ * @param req - The Express request object (not used in this function).
+ * @param res - The Express response object used to send back the response.
+ */
+const logout = asyncHandler(async (req: Request, res: Response) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "User logged out successfully", user: null });
+});
+
+/**
+ * Retrieves the currently authenticated user's information.
+ * Checks if the user is authenticated and fetches their data from the database.
+ * Returns the user information (excluding the password) upon successful retrieval.
+ * @param req - The Express request object containing the authentication token.
+ * @param res - The Express response object used to send back the response.
+ */
 const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
   if (!req.userId) {
     res.status(401).json({ message: "Not authenticated" });
@@ -104,7 +133,6 @@ const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
 
   const user = await prisma.user.findUnique({
     where: { id: req.userId },
-    select: { id: true, name: true, email: true },
   });
 
   if (!user) {
@@ -112,7 +140,8 @@ const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
     return;
   }
 
-  res.status(200).json({ user });
+  const { password: _password, ...userWithoutPassword } = user;
+  res.status(200).json({ user: userWithoutPassword });
 });
 
-export { register, login, getMe };
+export { register, login, logout, getMe };

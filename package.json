@@ -1,0 +1,12 @@
+{
+  "name": "udemy",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter client --filter server dev"
+  },
+  "workspaces": [
+    "client",
+    "server",
+    "packages/*"
+  ]
+}

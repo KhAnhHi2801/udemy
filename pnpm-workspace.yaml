@@ -1,0 +1,9 @@
+packages:
+  - "client"
+  - "server"
+  - "packages/*"
+allowBuilds:
+  '@prisma/engines': true
+  bcrypt: true
+  prisma: true
+  sharp: true

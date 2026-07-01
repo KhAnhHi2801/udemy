@@ -8,8 +8,10 @@ import {
   LoginOutlined,
   GlobalOutlined,
   DownOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import AccountDropdown from "./AccountDropdown";
 
 const LOCALES = [
   { code: "en", flag: "🇬🇧", label: "English" },
@@ -51,6 +53,11 @@ const TopNav = () => {
   const router = useRouter();
   const { t } = useTranslation("common");
 
+  const handleLogout = () => {
+    // Implement logout logic here, e.g., clear auth tokens, redirect to login page, etc.
+    console.log("User logged out");
+  };
+
   const navItems: MenuProps["items"] = [
     {
       key: "/",
@@ -79,6 +86,16 @@ const TopNav = () => {
         </Link>
       ),
     },
+    {
+      key: "/logout",
+      icon: <LogoutOutlined />,
+      label: (
+        <Button type="link" onClick={handleLogout}>
+          {t("Logout")}
+        </Button>
+      ),
+      className: "float-right",
+    },
   ];
 
   return (
@@ -89,7 +106,7 @@ const TopNav = () => {
         selectedKeys={[router.pathname]}
         style={{ flex: 1, borderBottom: "none" }}
       />
-      <LocaleDropdown />
+      <AccountDropdown />
     </div>
   );
 };
