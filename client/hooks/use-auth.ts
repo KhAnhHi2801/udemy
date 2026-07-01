@@ -1,8 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "../lib/axios";
-import { type User, useSetUser } from "../stores/auth";
+import { type User, useSetUser, useLogout } from "../stores/auth";
 
-interface RegisterData extends User {
+interface RegisterData extends Omit<User, "id"> {
   password: string;
 }
 
@@ -41,4 +41,27 @@ const useLogin = () => {
   });
 };
 
-export { useRegister, useLogin };
+const useMe = () => {
+  const setUser = useSetUser();
+  const logout = useLogout();
+
+  return useQuery({
+    queryKey: ["me"],
+    queryFn: async () => {
+      try {
+        const res = await api.get("/me");
+        const user: User = res.data.user;
+        setUser(user);
+
+        return user;
+      } catch (error) {
+        logout();
+
+        throw error;
+      }
+    },
+    retry: false,
+  });
+};
+
+export { useRegister, useLogin, useMe };

@@ -5,6 +5,7 @@ import { comparePassword, hashPassword } from "../utils/auth.ts";
 import asyncHandler from "../lib/async-handler.ts";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import type { AuthRequest } from "../middleware/require-auth.ts";
 
 dotenv.config();
 
@@ -95,4 +96,23 @@ const login = asyncHandler(async (req: Request, res: Response) => {
     .json({ message: "User login successfully", user: userWithoutPassword });
 });
 
-export { register, login };
+const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.userId },
+    select: { id: true, name: true, email: true },
+  });
+
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+    return;
+  }
+
+  res.status(200).json({ user });
+});
+
+export { register, login, getMe };

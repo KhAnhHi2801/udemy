@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { readdirSync } from "fs";
 import prisma from "./lib/prisma.ts";
 import { z } from "zod";
@@ -19,6 +20,7 @@ app.use(
   }),
 );
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 const loadRoutes = async () => {
