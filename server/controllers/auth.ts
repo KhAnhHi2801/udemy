@@ -72,7 +72,7 @@ const login = asyncHandler(async (req: Request, res: Response) => {
   });
 
   if (!user) {
-    res.status(400).json({ message: "No user found" });
+    res.status(400).json({ message: "Invalid email or password" });
     return;
   }
 
@@ -96,7 +96,7 @@ const login = asyncHandler(async (req: Request, res: Response) => {
   // Send token in cookie
   res.cookie("token", token, {
     httpOnly: true,
-    // secure: true, // Only works on https
+    secure: process.env.NODE_ENV === "production", // Only works on https
   });
 
   // Return user to client, exclude hashed password
